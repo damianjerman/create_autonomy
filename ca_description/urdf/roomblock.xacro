@@ -8,7 +8,7 @@ Block on top of the Create 2 that contains a Raspicam and an RPLidar
   <xacro:include filename="$(find ca_description)/urdf/sensors/laser_sensor.xacro"/>
   <xacro:include filename="$(find ca_description)/urdf/sensors/camera_sensor.xacro"/>
 
-  <xacro:macro name="roomblock" params="parent visualize:=false">
+  <xacro:macro name="roomblock" params="parent visualize:=false gpu:=false">
 
     <xacro:property name="z" value="0.061"/>
     <xacro:property name="roomblock_link" value="block_link"/>
@@ -39,7 +39,8 @@ Block on top of the Create 2 that contains a Raspicam and an RPLidar
       </xacro:inertial_cuboid_with_pose>
     </link>
 
-    <xacro:laser_sensor parent="${roomblock_link}" visualize="$(arg visualize)"/>
+    <xacro:laser_sensor parent="${roomblock_link}" visualize="${visualize}" gpu="${gpu}"/>
+
     <xacro:camera_sensor parent="${roomblock_link}"/>
 
     <xacro:roomblock_gazebo link_name="${roomblock_link}"/>

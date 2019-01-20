@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-<xacro:macro name="laser_sensor_gazebo" params="link_name visualize:=false">
+<xacro:macro name="laser_sensor_gazebo" params="link_name visualize:=false gpu:=false">
 
   <xacro:property name="rplidar_a2_rate_hz" value="10"/>
   <xacro:property name="rplidar_a2_min_range_m" value="0.15"/>
@@ -14,9 +14,18 @@
   <xacro:property name="laser_link" value="${link_name}"/>
   <xacro:property name="topic_name" value="laser/scan"/>
 
+  <xacro:if value="${gpu}">
+    <xacro:property name="ray_type" value="gpu_ray"/>
+    <xacro:property name="ray_plugin" value="libgazebo_ros_gpu_laser.so"/>
+  </xacro:if>
+  <xacro:unless value="${gpu}">
+    <xacro:property name="ray_type" value="ray"/>
+    <xacro:property name="ray_plugin" value="libgazebo_ros_laser.so"/>
+  </xacro:unless>
+
   <gazebo reference="${link_name}">
     <material>Gazebo/Black</material>
-    <sensor type="ray" name="rplidar_sensor">
+    <sensor type="${ray_type}" name="rplidar_sensor">
       <pose>0 0 0 0 0 0</pose>
       <visualize>${visualize}</visualize>
       <update_rate>${rplidar_a2_rate_hz}</update_rate>
@@ -44,7 +53,7 @@
           <stddev>0.01</stddev>
         </noise>
       </ray>
-      <plugin name="gazebo_ros_rplidar_controller" filename="libgazebo_ros_laser.so">
+      <plugin name="gazebo_ros_rplidar_controller" filename="${ray_plugin}">
         <topicName>${topic_name}</topicName>
         <frameName>${link_name}</frameName>
       </plugin>

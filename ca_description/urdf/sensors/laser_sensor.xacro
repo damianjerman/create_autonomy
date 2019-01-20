@@ -2,7 +2,7 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:include filename="$(find ca_description)/urdf/sensors/laser_sensor_gazebo.xacro"/>
 
-  <xacro:macro name="laser_sensor" params="parent visualize:=false">
+  <xacro:macro name="laser_sensor" params="parent visualize:=false gpu:=false">
 
     <xacro:property name="parent_link" value="${parent}"/>
     <xacro:property name="laser_link" value="laser_link"/>
@@ -22,7 +22,7 @@
     <link name="${laser_link}"/>
 
     <!-- Gazebo plugin -->
-    <xacro:laser_sensor_gazebo link_name="${laser_link}" visualize="$(arg visualize)"/>
+    <xacro:laser_sensor_gazebo link_name="${laser_link}" visualize="${visualize}" gpu="${gpu}"/>
 
   </xacro:macro>
 
