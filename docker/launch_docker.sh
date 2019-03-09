@@ -16,7 +16,7 @@ if [[ $IMAGE_NAME = *"nvidia"* ]]; then
   NVIDIA_FLAG="--runtime=nvidia"
 fi
 
-xhost +
+xhost +local:docker
 docker run -it \
     --privileged --rm \
     "--ipc=host" \
