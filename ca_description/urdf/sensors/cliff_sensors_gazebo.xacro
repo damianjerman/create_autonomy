@@ -1,15 +1,25 @@
 <?xml version="1.0" ?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-<xacro:macro name="sim_create_cliff_sensors" params="visualize:=false">
+<xacro:macro name="sim_create_cliff_sensors" params="visualize:=false gpu:=false">
 
   <xacro:property name="min_range_m" value="0.01"/>
   <xacro:property name="max_range_m" value="0.04"/>
 
   <xacro:property name="rate_hz" value="20.0"/>
 
+  <!-- Use GPU lasers or not -->
+  <xacro:if value="${gpu}">
+    <xacro:property name="ray_type" value="gpu_ray"/>
+    <xacro:property name="ray_plugin" value="libgazebo_ros_gpu_laser.so"/>
+  </xacro:if>
+  <xacro:unless value="${gpu}">
+    <xacro:property name="ray_type" value="ray"/>
+    <xacro:property name="ray_plugin" value="libgazebo_ros_laser.so"/>
+  </xacro:unless>
+
   <gazebo reference="${name_side_left}_cliff_sensor_link">
-    <sensor type="ray" name="${name_side_left}_cliff_sensor">
+    <sensor type="${ray_type}" name="${name_side_left}_cliff_sensor">
       <always_on>true</always_on>
       <update_rate>${rate_hz}</update_rate>
       <pose>0 0 0 0 0 0</pose>
@@ -29,7 +39,7 @@
           <resolution>0.1</resolution>
         </range>
       </ray>
-      <plugin name="gazebo_ros_${name_side_left}_cliff_sensor" filename="libgazebo_ros_laser.so">
+      <plugin name="gazebo_ros_${name_side_left}_cliff_sensor" filename="${ray_plugin}">
         <topicName>${name_side_left}_cliff_sensor/scan</topicName>
         <frameName>${name_side_left}_cliff_sensor_link</frameName>
       </plugin>
@@ -37,7 +47,7 @@
   </gazebo>
 
   <gazebo reference="${name_side_right}_cliff_sensor_link">
-    <sensor type="ray" name="${name_side_right}_cliff_sensor">
+    <sensor type="${ray_type}" name="${name_side_right}_cliff_sensor">
       <always_on>true</always_on>
       <update_rate>${rate_hz}</update_rate>
       <pose>0 0 0 0 0 0</pose>
@@ -57,7 +67,7 @@
           <resolution>0.1</resolution>
         </range>
       </ray>
-      <plugin name="gazebo_ros_${name_side_right}_cliff_sensor" filename="libgazebo_ros_laser.so">
+      <plugin name="gazebo_ros_${name_side_right}_cliff_sensor" filename="${ray_plugin}">
         <topicName>${name_side_right}_cliff_sensor/scan</topicName>
         <frameName>${name_side_right}_cliff_sensor_link</frameName>
       </plugin>
@@ -65,7 +75,7 @@
   </gazebo>
 
   <gazebo reference="${name_front_left}_cliff_sensor_link">
-    <sensor type="ray" name="${name_front_left}_cliff_sensor">
+    <sensor type="${ray_type}" name="${name_front_left}_cliff_sensor">
       <always_on>true</always_on>
       <update_rate>${rate_hz}</update_rate>
       <pose>0 0 0 0 0 0</pose>
@@ -85,7 +95,7 @@
           <resolution>0.1</resolution>
         </range>
       </ray>
-      <plugin name="gazebo_ros_${name_front_left}_cliff_sensor" filename="libgazebo_ros_laser.so">
+      <plugin name="gazebo_ros_${name_front_left}_cliff_sensor" filename="${ray_plugin}">
         <topicName>${name_front_left}_cliff_sensor/scan</topicName>
         <frameName>${name_front_left}_cliff_sensor</frameName>
       </plugin>
@@ -93,7 +103,7 @@
   </gazebo>
 
   <gazebo reference="${name_front_right}_cliff_sensor_link">
-    <sensor type="ray" name="${name_front_right}_cliff_sensor">
+    <sensor type="${ray_type}" name="${name_front_right}_cliff_sensor">
       <always_on>true</always_on>
       <update_rate>${rate_hz}</update_rate>
       <pose>0 0 0 0 0 0</pose>
@@ -113,7 +123,7 @@
           <resolution>0.1</resolution>
         </range>
       </ray>
-      <plugin name="gazebo_ros_${name_front_right}_cliff_sensor" filename="libgazebo_ros_laser.so">
+      <plugin name="gazebo_ros_${name_front_right}_cliff_sensor" filename="${ray_plugin}">
         <topicName>${name_front_right}_cliff_sensor/scan</topicName>
         <frameName>${name_front_right}_cliff_sensor</frameName>
       </plugin>

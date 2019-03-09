@@ -1,15 +1,25 @@
 <?xml version="1.0" ?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-<xacro:macro name="sim_create_wall_sensor" params="visualize:=false">
+<xacro:macro name="sim_create_wall_sensor" params="visualize:=false gpu:=false">
 
   <xacro:property name="link_name" value="wall_sensor_link"/>
   <xacro:property name="rate_hz" value="20.0"/>
   <xacro:property name="min_range_m" value="0.0160"/>
   <xacro:property name="max_range_m" value="0.04"/>
 
+  <!-- Use GPU lasers or not -->
+  <xacro:if value="${gpu}">
+    <xacro:property name="ray_type" value="gpu_ray"/>
+    <xacro:property name="ray_plugin" value="libgazebo_ros_gpu_laser.so"/>
+  </xacro:if>
+  <xacro:unless value="${gpu}">
+    <xacro:property name="ray_type" value="ray"/>
+    <xacro:property name="ray_plugin" value="libgazebo_ros_laser.so"/>
+  </xacro:unless>
+
   <gazebo reference="${link_name}">
-    <sensor type="ray" name="wall_sensor">
+    <sensor type="${ray_type}" name="wall_sensor">
       <always_on>true</always_on>
       <update_rate>${rate_hz}</update_rate>
       <pose>0 0 0 0 0 0</pose>
@@ -29,7 +39,7 @@
           <resolution>0.1</resolution>
         </range>
       </ray>
-      <plugin name="gazebo_ros_wall_sensor" filename="libgazebo_ros_laser.so">
+      <plugin name="gazebo_ros_wall_sensor" filename="${ray_plugin}">
         <topicName>/wall_sensor/scan</topicName>
         <frameName>${link_name}</frameName>
       </plugin>
