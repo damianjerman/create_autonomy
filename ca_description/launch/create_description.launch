@@ -8,7 +8,7 @@
 
   <!-- Robot description -->
   <arg name="xacro_args" value="visualize:=$(arg visualize) gpu:=$(arg gpu)"/>
-	<param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model) $(arg xacro_args)" />
+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model) $(arg xacro_args)" />
   <!-- Robot state publisher-->
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen" />
 
